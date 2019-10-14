@@ -20,3 +20,38 @@ spring:
     properties:
       hibernate:
         dialect : org.hibernate.dialect.MySQL5Dialect
+  #redis配置
+  redis:
+      cluster:
+        nodes: 127.0.0.1:6379
+      expireSeconds: 120
+      commandTimeout: 10000  #redis操作的超时时间
+      jedis:
+        pool:
+          maxActive: 5000 #最大连接数
+          maxIdle: 30 #最大空闲连接数
+          minIdle: 5 #最小空闲连接数
+          maxWait: 3000
+      messages:
+          basename: messages, index
+      cloud:
+        kubernetes:
+          enabled: false
+
+logging:
+  config: classpath:log4j2.xml
+  #指定日志的等级，可以对不同包采用不同的等级，比如如下配置就是将root的等级设置为info，将com.example设置为debug
+  level: {root: info,com.example: debug}
+  #file是设置日志的输出的路径，这里需要注意的是file和path属性只能选一个，不能同时存在
+  file: log.log
+
+#跨域支持
+web.cors:
+  enabled: true
+  allowCredentials: true
+  allowedOrigins:
+    - '*'
+  allowedHeaders:
+    - '*'
+  allowedMethods:
+    - '*'
