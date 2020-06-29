@@ -22,6 +22,7 @@ public class TestController {
     @Autowired
     TestService testService;
 
+    @CrossOrigin
     @RequestMapping(value = "/index",method = RequestMethod.GET)
     public String test(HttpServletRequest request){
         String ip = IpUtil.getIpAddr(request);
@@ -29,6 +30,7 @@ public class TestController {
         return ip;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/search",method = RequestMethod.GET)
     public Object searchForm(@RequestParam("username") String username){
         JSONObject jsonObject = new JSONObject();
