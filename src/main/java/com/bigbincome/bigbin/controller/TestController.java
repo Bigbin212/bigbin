@@ -3,7 +3,6 @@ package com.bigbincome.bigbin.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.bigbincome.bigbin.model.BZUserEntity;
-import com.bigbincome.bigbin.model.TbUserEntity;
 import com.bigbincome.bigbin.service.TbUserService;
 import com.bigbincome.bigbin.service.TestService;
 import com.bigbincome.bigbin.util.IpUtil;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
