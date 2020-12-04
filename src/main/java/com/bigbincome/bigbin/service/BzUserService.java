@@ -20,6 +20,10 @@ public class BzUserService {
         return bzUserDao.findAll();
     }
 
+    public List<BZUserEntity> findByUserName(String username){
+        return bzUserDao.findAllByUsername(username);
+    };
+
     public Map<String, Object> findAllPage(JSONObject jsonObject){
         Page<BZUserEntity> resultPage = bzUserDao.findAllPage(jsonObject);
         Long total = resultPage.getTotalElements();//数据总数

@@ -4,7 +4,6 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.bigbincome.bigbin.model.BZUserEntity;
 import com.bigbincome.bigbin.service.BzUserService;
-import com.bigbincome.bigbin.service.TestService;
 import com.bigbincome.bigbin.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,6 @@ import java.util.Map;
 public class TestController {
 
     @Autowired
-    TestService testService;
-    @Autowired
     BzUserService bzUserService;
 
     @CrossOrigin
@@ -39,7 +36,7 @@ public class TestController {
     @RequestMapping(value = "/search",method = RequestMethod.GET)
     public Object searchForm(@RequestParam("username") String username){
         JSONObject jsonObject = new JSONObject();
-        List<BZUserEntity> list = testService.findByUserName(username);
+        List<BZUserEntity> list = bzUserService.findByUserName(username);
         jsonObject.put("result",list);
         return  jsonObject;
     }
