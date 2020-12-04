@@ -1,8 +1,8 @@
 package com.bigbincome.bigbin.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bigbincome.bigbin.dao.TbUserDao;
-import com.bigbincome.bigbin.model.TbUserEntity;
+import com.bigbincome.bigbin.dao.BZUserDao;
+import com.bigbincome.bigbin.model.BZUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class TbUserService {
+public class BzUserService {
     @Autowired
-    TbUserDao tbUserDao;
+    BZUserDao bzUserDao;
 
-    public List<TbUserEntity> findAll () {
-        return tbUserDao.findAll();
+    public List<BZUserEntity> findAll () {
+        return bzUserDao.findAll();
     }
 
     public Map<String, Object> findAllPage(JSONObject jsonObject){
-        Page<TbUserEntity> resultPage = tbUserDao.findAllPage(jsonObject);
+        Page<BZUserEntity> resultPage = bzUserDao.findAllPage(jsonObject);
         Long total = resultPage.getTotalElements();//数据总数
         Map<String , Object> resultMap = new HashMap<>();
         resultMap.put("total" , total);

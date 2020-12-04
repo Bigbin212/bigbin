@@ -3,7 +3,7 @@ package com.bigbincome.bigbin.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.bigbincome.bigbin.model.BZUserEntity;
-import com.bigbincome.bigbin.service.TbUserService;
+import com.bigbincome.bigbin.service.BzUserService;
 import com.bigbincome.bigbin.service.TestService;
 import com.bigbincome.bigbin.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class TestController {
     @Autowired
     TestService testService;
     @Autowired
-    TbUserService tbUserService;
+    BzUserService bzUserService;
 
     @CrossOrigin
     @RequestMapping(value = "/index",method = RequestMethod.GET)
@@ -59,7 +59,7 @@ public class TestController {
         }else{
             jsonObject.put("pageNo",pageNo);
         }
-        Map<String , Object> resultMap = tbUserService.findAllPage(jsonObject);
+        Map<String , Object> resultMap = bzUserService.findAllPage(jsonObject);
         return resultMap;
     }
 
