@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @RestController
 @Slf4j
-@RequestMapping(value = "/test")
+@RequestMapping(value = "/api")
 public class TestController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class TestController {
     @RequestMapping(value = "/index",method = RequestMethod.GET)
     public String test(HttpServletRequest request){
         String ip = IpUtil.getIpAddr(request);
-        log.debug(ip);
+//        log.debug(ip);
         return ip;
     }
 
@@ -41,6 +41,13 @@ public class TestController {
         return  jsonObject;
     }
 
+    /**
+     * 测试分页查询用户信息
+     * @param name
+     * @param pageSize
+     * @param pageNo
+     * @return
+     */
     @CrossOrigin
     @RequestMapping(value = "/findAll",method = RequestMethod.GET)
     public Map<String , Object> findAll(@RequestParam("name") String name,@RequestParam("pageSize") String pageSize,@RequestParam("pageNo") String pageNo){
@@ -60,4 +67,23 @@ public class TestController {
         return resultMap;
     }
 
+    /**
+     * 新增用户
+     * @param bzUserEntity
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value="/addUser",method = RequestMethod.POST)
+    public Object insertMapping(@RequestBody BZUserEntity bzUserEntity,HttpServletRequest request){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success",true);
+        try{
+            bzUserService.insertMessage(bzUserEntity,request);
+        }catch (Exception e){
+            jsonObject.put("success",false);
+            jsonObject.put("result",e.getMessage());
+        }
+        return jsonObject;
+    }
 }

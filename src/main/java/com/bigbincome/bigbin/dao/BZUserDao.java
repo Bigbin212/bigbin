@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.criteria.Predicate;
 import java.util.*;
@@ -30,4 +32,8 @@ public interface BZUserDao extends JpaRepository<BZUserEntity, Long>, JpaSpecifi
             return query.getRestriction();
         } , pageable);
     }
+
+   /* @Modifying
+    @Query(value="insert into b_zuser (xlh,username,password,ip,email,zcsj,phone,photo) values (,username,password,ip,email,zcsj,phone,photo)",nativeQuery = true)
+    int insertMessgae(BZUserEntity model);*/
 }
