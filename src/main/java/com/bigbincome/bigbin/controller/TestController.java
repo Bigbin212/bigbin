@@ -86,4 +86,19 @@ public class TestController {
         }
         return jsonObject;
     }
+
+    @RequestMapping(value = "/deleteUser",method = RequestMethod.DELETE)
+    public Object deleteUser(@RequestParam("xlh") String xlh){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success",true);
+
+        try{
+            bzUserService.deleteUser(xlh);
+        }catch (Exception e){
+            jsonObject.put("success",false);
+            jsonObject.put("result",e.getMessage());
+        }
+
+        return jsonObject;
+    }
 }

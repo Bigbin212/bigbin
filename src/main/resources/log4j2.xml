@@ -2,15 +2,15 @@
 <Configuration status="INFO" monitorInterval="30">
     <Properties>
         <!--  输出路径  -->
-        <Property name="logpath">/Log4j/logs/log/dev</Property>
+        <Property name="logpath">/Log4j</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
                     pattern="[%d][%-5p][%t] %m (%F:%L)%n"/>
         </Console>
-        <RollingFile name="debug" fileName="${logpath}/debug/erp_debug.log"
-                     filePattern="${logpath}/debug/erp_debug_%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="debug" fileName="${logpath}/debug.log"
+                     filePattern="${logpath}/debug_%d{yyyy-MM-dd}-%i.log">
             <Filters>
                 <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
@@ -27,7 +27,7 @@
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
-        <RollingFile name="info" fileName="${logpath}/info/erp_info.log"
+        <RollingFile name="info" fileName="${logpath}/info.log"
                      filePattern="${logpath}/info/erp_info_%d{yyyy-MM-dd}-%i.log">
             <Filters>
                 <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
@@ -45,8 +45,8 @@
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
-        <RollingFile name="warn" fileName="${logpath}/warn/erp_warn.log"
-                     filePattern="${logpath}/warn/erp_warn_%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="warn" fileName="${logpath}/warn.log"
+                     filePattern="${logpath}/warn_%d{yyyy-MM-dd}-%i.log">
             <Filters>
                 <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
@@ -63,8 +63,8 @@
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
-        <RollingFile name="error" fileName="${logpath}/error/erp_error.log"
-                     filePattern="${logpath}/error/erp_error_%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="error" fileName="${logpath}/error.log"
+                     filePattern="${logpath}/error_%d{yyyy-MM-dd}-%i.log">
             <Filters>
                 <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>

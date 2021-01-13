@@ -4,6 +4,7 @@ package com.bigbincome.bigbin.dao;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.bigbincome.bigbin.model.BZUserEntity;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.util.*;
 
 public interface BZUserDao extends JpaRepository<BZUserEntity, Long>, JpaSpecificationExecutor<BZUserEntity>{
@@ -33,7 +35,10 @@ public interface BZUserDao extends JpaRepository<BZUserEntity, Long>, JpaSpecifi
         } , pageable);
     }
 
-   /* @Modifying
-    @Query(value="insert into b_zuser (xlh,username,password,ip,email,zcsj,phone,photo) values (,username,password,ip,email,zcsj,phone,photo)",nativeQuery = true)
-    int insertMessgae(BZUserEntity model);*/
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value="delete from b_z_user where xlh = :xlh",nativeQuery = true)
+    int deleteByXlh(String xlh);
+
+
 }

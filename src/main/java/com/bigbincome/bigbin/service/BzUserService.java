@@ -41,4 +41,12 @@ public class BzUserService {
         bzUserEntity.setZcsj(new Timestamp(new Date().getTime()));
         bzUserDao.save(bzUserEntity);
     }
+
+    public void deleteUser(String xlh) {
+        bzUserDao.deleteByXlh(xlh);
+    }
+
+    public void updateUser(BZUserEntity bzUserEntity){
+
+    }
 }
