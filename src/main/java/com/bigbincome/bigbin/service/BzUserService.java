@@ -3,18 +3,23 @@ package com.bigbincome.bigbin.service;
 import com.alibaba.fastjson.JSONObject;
 import com.bigbincome.bigbin.dao.BZUserDao;
 import com.bigbincome.bigbin.model.BZUserEntity;
+import com.bigbincome.bigbin.util.DESUtil;
+import com.bigbincome.bigbin.util.DateUtils;
 import com.bigbincome.bigbin.util.IpUtil;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
 
 @Service
 public class BzUserService {
+
+    private static final String DEFAULT_PASSWORD = "88888888";
+
     @Autowired
     BZUserDao bzUserDao;
 
@@ -36,17 +41,28 @@ public class BzUserService {
     }
 
     public void insertMessage(BZUserEntity bzUserEntity, HttpServletRequest request){
-        bzUserEntity.setXlh(UUID.randomUUID().toString());
+        if(StringUtil.isNullOrEmpty(bzUserEntity.getXlh())){
+            bzUserEntity.setXlh(UUID.randomUUID().toString());
+        }
+        if(!StringUtil.isNullOrEmpty(bzUserEntity.getPassword())){
+            bzUserEntity.setPassword(DESUtil.encryptBasedDes(bzUserEntity.getPassword()));
+        }else{
+            bzUserEntity.setPassword(DESUtil.encryptBasedDes(DEFAULT_PASSWORD));
+        }
+        System.out.println(DateUtils.formatDate2String(new Date(),null));
         bzUserEntity.setIp(IpUtil.getIpAddr(request));
-        bzUserEntity.setZcsj(new Timestamp(new Date().getTime()));
+        /*if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(bzUserEntity.getZcsj(),null))){
+            bzUserEntity.setZcsj(new Date());
+        }*/
+        bzUserEntity.setZcsj(new Date());
         bzUserDao.save(bzUserEntity);
     }
 
+    /**
+     * 根据xlh删除数据
+     * @param xlh
+     */
     public void deleteUser(String xlh) {
         bzUserDao.deleteByXlh(xlh);
-    }
-
-    public void updateUser(BZUserEntity bzUserEntity){
-
     }
 }

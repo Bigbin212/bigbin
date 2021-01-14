@@ -2,6 +2,7 @@ package com.bigbincome.bigbin.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +13,7 @@ public class BZUserEntity {
     private String password;
     private String ip;
     private String email;
-    private Timestamp zcsj;
+    private Date zcsj;
     private String phone;
     private String photo;
     private String yhqx;
@@ -69,11 +70,11 @@ public class BZUserEntity {
 
     @Basic
     @Column(name = "zcsj")
-    public Timestamp getZcsj() {
+    public Date getZcsj() {
         return zcsj;
     }
 
-    public void setZcsj(Timestamp zcsj) {
+    public void setZcsj(Date zcsj) {
         this.zcsj = zcsj;
     }
 
