@@ -1,13 +1,13 @@
 
 server:
-  port: 8090
+  port: 8099
   session-timeout: 30
   tomcat.max-threads: 0
   tomcat.uri-encoding: UTF-8
 
 spring:
   datasource:
-    url : jdbc:mysql://127.0.0.1:3306/bigbin?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url : jdbc:mysql://127.0.0.1:3306/bigbin?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&characterEncoding=utf-8&serverTimezone=GMT%2b8
     username : bigbin
     password : bigbin
     driverClassName : com.mysql.cj.jdbc.Driver
@@ -41,10 +41,10 @@ spring:
 
 logging:
   config: classpath:log4j2.xml
-  #指定日志的等级，可以对不同包采用不同的等级，比如如下配置就是将root的等级设置为info，将com.example设置为debug
-  level: {root: info,com.example: debug}
-  #file是设置日志的输出的路径，这里需要注意的是file和path属性只能选一个，不能同时存在
-  file: log.log
+  #指定日志的等级
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
 
 #跨域支持
 web.cors:

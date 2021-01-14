@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Configurable
 @EnableScheduling
 public class TestTask {
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0/50 * * * * ?")
     public void Rll(){
         System.out.println("ce shi");
     }

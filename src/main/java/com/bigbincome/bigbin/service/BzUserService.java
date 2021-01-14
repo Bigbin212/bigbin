@@ -40,6 +40,11 @@ public class BzUserService {
         return resultMap;
     }
 
+    /**
+     * 新增或者修改
+     * @param bzUserEntity
+     * @param request
+     */
     public void insertMessage(BZUserEntity bzUserEntity, HttpServletRequest request){
         if(StringUtil.isNullOrEmpty(bzUserEntity.getXlh())){
             bzUserEntity.setXlh(UUID.randomUUID().toString());
@@ -51,10 +56,9 @@ public class BzUserService {
         }
         System.out.println(DateUtils.formatDate2String(new Date(),null));
         bzUserEntity.setIp(IpUtil.getIpAddr(request));
-        /*if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(bzUserEntity.getZcsj(),null))){
+        if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(bzUserEntity.getZcsj(),null))){
             bzUserEntity.setZcsj(new Date());
-        }*/
-        bzUserEntity.setZcsj(new Date());
+        }
         bzUserDao.save(bzUserEntity);
     }
 
