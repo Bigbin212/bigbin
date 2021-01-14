@@ -28,7 +28,7 @@ public class TestController {
     @RequestMapping(value = "/index",method = RequestMethod.GET)
     public String test(HttpServletRequest request){
         String ip = IpUtil.getIpAddr(request);
-//        log.debug(ip);
+        log.debug(ip);
         return ip;
     }
 
@@ -83,6 +83,25 @@ public class TestController {
         jsonObject.put("success",true);
         try{
             bzUserService.insertMessage(bzUserEntity,request);
+        }catch (Exception e){
+            jsonObject.put("success",false);
+            jsonObject.put("result",e.getMessage());
+        }
+        return jsonObject;
+    }
+
+    /**
+     * 测试实体类的局部更新
+     * @param bzUserEntity
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/updateUserMessage",method = RequestMethod.PUT)
+    public Object updateMapping(@RequestBody BZUserEntity bzUserEntity,HttpServletRequest request){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success",true);
+        try{
+            bzUserService.updateMessage(bzUserEntity,request);
         }catch (Exception e){
             jsonObject.put("success",false);
             jsonObject.put("result",e.getMessage());

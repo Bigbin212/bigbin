@@ -46,6 +46,29 @@ public class BzUserService {
      * @param request
      */
     public void insertMessage(BZUserEntity bzUserEntity, HttpServletRequest request){
+        bzUserEntity = initModel(bzUserEntity,request);
+        bzUserDao.save(bzUserEntity);
+    }
+
+    /**
+     * 根据xlh删除数据
+     * @param xlh
+     */
+    public void deleteUser(String xlh) {
+        bzUserDao.deleteByXlh(xlh);
+    }
+
+    /**
+     * 测试实体类的局部更新
+     * @param bzUserEntity
+     * @param request
+     */
+    public void updateMessage(BZUserEntity bzUserEntity, HttpServletRequest request) {
+        bzUserEntity = initModel(bzUserEntity,request);
+        bzUserDao.updateMessage(bzUserEntity);
+    }
+
+    public BZUserEntity initModel(BZUserEntity bzUserEntity, HttpServletRequest request){
         if(StringUtil.isNullOrEmpty(bzUserEntity.getXlh())){
             bzUserEntity.setXlh(UUID.randomUUID().toString());
         }
@@ -59,14 +82,6 @@ public class BzUserService {
         if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(bzUserEntity.getZcsj(),null))){
             bzUserEntity.setZcsj(new Date());
         }
-        bzUserDao.save(bzUserEntity);
-    }
-
-    /**
-     * 根据xlh删除数据
-     * @param xlh
-     */
-    public void deleteUser(String xlh) {
-        bzUserDao.deleteByXlh(xlh);
+        return bzUserEntity;
     }
 }
