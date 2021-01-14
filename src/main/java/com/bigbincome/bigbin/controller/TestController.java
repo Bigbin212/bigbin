@@ -68,13 +68,16 @@ public class TestController {
     }
 
     /**
-     * 新增用户
+     * 新增、修改用户
+     * RequestMapping：
+     *     1、不设置method 默认任何请求方式都接收
+     *     2、可以配置多个url映射
      * @param bzUserEntity
      * @param request
      * @return
      */
     @CrossOrigin
-    @RequestMapping(value="/addUser",method = RequestMethod.POST)
+    @RequestMapping({"/addUser","/updateUser"})
     public Object insertMapping(@RequestBody BZUserEntity bzUserEntity,HttpServletRequest request){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success",true);
