@@ -6,8 +6,7 @@
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout
-                    pattern="[%d][%-5p][%t] %m (%F:%L)%n"/>
+            <PatternLayout pattern="[%d][%-5p][%t] %m (%F:%L)%n"/>
         </Console>
         <RollingFile name="debug" fileName="${logpath}/debug.log"
                      filePattern="${logpath}/debug_%d{yyyy-MM-dd}-%i.log">

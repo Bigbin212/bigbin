@@ -1,7 +1,6 @@
 package com.bigbincome.bigbin.model;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -128,4 +127,20 @@ public class BZUserEntity {
     public int hashCode() {
         return Objects.hash(xlh, username, password, ip, email, zcsj, phone, photo, yhqx);
     }
+
+    @Override
+    public String toString() {
+        return "BZUserEntity{" +
+                "xlh='" + xlh + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", ip='" + ip + '\'' +
+                ", email='" + email + '\'' +
+                ", zcsj=" + zcsj +
+                ", phone='" + phone + '\'' +
+                ", photo='" + photo + '\'' +
+                ", yhqx='" + yhqx + '\'' +
+                '}';
+    }
+
 }
