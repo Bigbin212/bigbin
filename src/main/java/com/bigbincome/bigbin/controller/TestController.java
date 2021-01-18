@@ -45,9 +45,9 @@ public class TestController {
      */
     @CrossOrigin
     @RequestMapping(value = "/search",method = RequestMethod.GET)
-    public Object searchForm(@RequestParam("username") String username){
+    public Object searchForm(@RequestParam(value = "username" ,required = false) String username){
         JSONObject jsonObject = new JSONObject();
-        List<BZUserEntity> list = bzUserService.findByUserName(username);
+        List<BZUserEntity> list = bzUserService.findAllByUsernameLike(username);
         jsonObject.put("result",list);
         return  jsonObject;
     }

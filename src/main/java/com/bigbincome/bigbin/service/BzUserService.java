@@ -17,10 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -44,8 +41,12 @@ public class BzUserService {
         return bzUserDao.findAll();
     }
 
-    public List<BZUserEntity> findByUserName(String username){
-        return bzUserDao.findAllByUsername(username);
+    public List<BZUserEntity> findAllByUsernameLike(String username){
+        StringBuilder stringBuilder = new StringBuilder();
+        if(!StringUtil.isNullOrEmpty(username)){
+            username = String.valueOf(stringBuilder.append("%").append(username).append("%"));
+        }
+        return bzUserDao.findAllByUsernameLike(username);
     };
 
     /**
@@ -138,6 +139,7 @@ public class BzUserService {
         JSONObject jsonObject = new JSONObject();
         List<BZUserEntity> result = null;
         long total = 0;
+        List<Sort.Order> orderList = new ArrayList<>();
         // 构造自定义查询条件
         Specification<BZUserEntity> queryCondition = new Specification<BZUserEntity>() {
             @Override
@@ -154,11 +156,15 @@ public class BzUserService {
             }
         };
 
+        //尝试多个排序条件 仅作测试用
+        orderList.add(new Sort.Order(Sort.Direction.ASC,"xlh"));
+        orderList.add(new Sort.Order(Sort.Direction.DESC,"zcsj"));
+        Sort sort = new Sort(orderList);
         // 分页的话按创建时间降序
         try {
             if(pageNo == 0 && pageSize == 0){
                 //直接根据查询条件查全部的数据
-                result = bzUserDao.findAll(queryCondition,Sort.by(Sort.Direction.DESC, "zcsj"));
+                result = bzUserDao.findAll(queryCondition,sort);
             }else{
                 //根据相关的查询条件以及分页相关的信息
                 result = bzUserDao.findAll(queryCondition, PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC, "zcsj"))).getContent();

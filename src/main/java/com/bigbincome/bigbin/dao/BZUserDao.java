@@ -21,7 +21,7 @@ import java.util.*;
 public interface BZUserDao extends JpaRepository<BZUserEntity, Long>, JpaSpecificationExecutor<BZUserEntity>{
     List<BZUserEntity> findAll();
 
-    List<BZUserEntity> findAllByUsername(String username) ;
+    List<BZUserEntity> findAllByUsernameLike(String username);
 
     default Page<BZUserEntity> findAllPage(JSONObject jsonObject){
         Pageable pageable = new PageRequest(jsonObject.getInteger("pageNo") - 1 ,jsonObject.getInteger("pageSize") , new Sort(Sort.Direction.DESC, "xlh"));
