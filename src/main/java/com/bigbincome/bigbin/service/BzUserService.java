@@ -16,12 +16,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 //@Log4j2
+@Transactional
 @Service
 public class BzUserService {
 
@@ -41,12 +43,26 @@ public class BzUserService {
         return bzUserDao.findAll();
     }
 
+    /**
+     * 这边使用like 需要自己手动拼上%否则按全文匹配查询
+     * @param username
+     * @return
+     */
     public List<BZUserEntity> findAllByUsernameLike(String username){
         StringBuilder stringBuilder = new StringBuilder();
         if(!StringUtil.isNullOrEmpty(username)){
             username = String.valueOf(stringBuilder.append("%").append(username).append("%"));
         }
         return bzUserDao.findAllByUsernameLike(username);
+    };
+
+    /**
+     * 这边的Containing就是like查询自动加上%%
+     * @param username
+     * @return
+     */
+    public List<BZUserEntity> findAllByUsernameContaining(String username){
+        return bzUserDao.findAllByUsernameContaining(username);
     };
 
     /**
@@ -65,12 +81,15 @@ public class BzUserService {
 
     /**
      * 新增或者修改
+     * save 先保存在内存中->发flush或者commit命令
+     * saveAndFlush 方法立马提交生效
      * @param bzUserEntity
      * @param request
      */
     public void insertMessage(BZUserEntity bzUserEntity, HttpServletRequest request){
         bzUserEntity = initModel(bzUserEntity,request);
-        bzUserDao.save(bzUserEntity);
+//        bzUserDao.save(bzUserEntity);
+        bzUserDao.saveAndFlush(bzUserEntity);
     }
 
     /**
@@ -98,9 +117,9 @@ public class BzUserService {
      * @return
      */
     public BZUserEntity initModel(BZUserEntity bzUserEntity, HttpServletRequest request){
-        if(StringUtil.isNullOrEmpty(bzUserEntity.getXlh())){
+       /* if(StringUtil.isNullOrEmpty(bzUserEntity.getXlh())){
             bzUserEntity.setXlh(UUID.randomUUID().toString());
-        }
+        }*/
         if(!StringUtil.isNullOrEmpty(bzUserEntity.getPassword())){
             bzUserEntity.setPassword(DESUtil.encryptBasedDes(bzUserEntity.getPassword()));
         }else{
@@ -178,5 +197,13 @@ public class BzUserService {
         }
 
         return jsonObject;
+    }
+
+    /**
+     * 批量删除
+     * @param list
+     */
+    public void deleteUserList(List<String> list) {
+        bzUserDao.deleteByXlhList(list);
     }
 }

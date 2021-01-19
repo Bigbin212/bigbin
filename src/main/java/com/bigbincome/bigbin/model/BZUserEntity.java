@@ -1,5 +1,7 @@
 package com.bigbincome.bigbin.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -17,7 +19,10 @@ public class BZUserEntity {
     private String photo;
     private String yhqx;
 
+    //主键可以设置自动生成uuid
     @Id
+    @GenericGenerator(name = "xlh-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "xlh-uuid")
     @Column(name = "xlh")
     public String getXlh() {
         return xlh;

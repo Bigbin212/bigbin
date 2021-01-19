@@ -19,9 +19,13 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 public interface BZUserDao extends JpaRepository<BZUserEntity, Long>, JpaSpecificationExecutor<BZUserEntity>{
+
     List<BZUserEntity> findAll();
 
+    //模糊查询需要手动加%%
     List<BZUserEntity> findAllByUsernameLike(String username);
+    //模糊查询不需要手动加%%
+    List<BZUserEntity> findAllByUsernameContaining(String username);
 
     default Page<BZUserEntity> findAllPage(JSONObject jsonObject){
         Pageable pageable = new PageRequest(jsonObject.getInteger("pageNo") - 1 ,jsonObject.getInteger("pageSize") , new Sort(Sort.Direction.DESC, "xlh"));
@@ -47,4 +51,10 @@ public interface BZUserDao extends JpaRepository<BZUserEntity, Long>, JpaSpecifi
     @Query(value="update b_z_user set username = :#{#bzUserEntity.username} ,email = :#{#bzUserEntity.email} ," +
             "ip = :#{#bzUserEntity.ip} ,password = :#{#bzUserEntity.password} where xlh = :#{#bzUserEntity.xlh}",nativeQuery = true)
     void updateMessage(BZUserEntity bzUserEntity);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "delete from b_z_user where xlh in (:xlhs)",nativeQuery = true)
+    void deleteByXlhList(@Param("xlhs") List<String> xlhs);
+
 }

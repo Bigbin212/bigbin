@@ -47,7 +47,7 @@ public class TestController {
     @RequestMapping(value = "/search",method = RequestMethod.GET)
     public Object searchForm(@RequestParam(value = "username" ,required = false) String username){
         JSONObject jsonObject = new JSONObject();
-        List<BZUserEntity> list = bzUserService.findAllByUsernameLike(username);
+        List<BZUserEntity> list = bzUserService.findAllByUsernameContaining(username);//bzUserService.findAllByUsernameLike(username);
         jsonObject.put("result",list);
         return  jsonObject;
     }
@@ -159,6 +159,11 @@ public class TestController {
         return jsonObject;
     }
 
+    /**
+     * 单个删除
+     * @param xlh
+     * @return
+     */
     @RequestMapping(value = "/deleteUser",method = RequestMethod.DELETE)
     public Object deleteUser(@RequestParam("xlh") String xlh){
         JSONObject jsonObject = new JSONObject();
@@ -169,6 +174,25 @@ public class TestController {
         }
         try{
             bzUserService.deleteUser(xlh);
+        }catch (Exception e){
+            jsonObject.put("success",false);
+            jsonObject.put("result",e.getMessage());
+        }
+
+        return jsonObject;
+    }
+
+    /**
+     * 批量删除
+     * @param list
+     * @return
+     */
+    @RequestMapping(value = "/deleteUserList",method = RequestMethod.DELETE)
+    public Object deleteUserList(@RequestBody List<String> list){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success",true);
+        try{
+            bzUserService.deleteUserList(list);
         }catch (Exception e){
             jsonObject.put("success",false);
             jsonObject.put("result",e.getMessage());
@@ -192,9 +216,9 @@ public class TestController {
         List<BZUserEntity> list1 = new ArrayList<BZUserEntity>();
         try{
             list.forEach(e->{
-                if(StringUtil.isNullOrEmpty(e.getXlh())){
+               /* if(StringUtil.isNullOrEmpty(e.getXlh())){
                     e.setXlh(UUID.randomUUID().toString());
-                }
+                }*/
                 e.setIp(IpUtil.getIpAddr(request));
                 e.setPassword(DESUtil.encryptBasedDes(e.getPassword()));
                 if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(e.getZcsj(),null))){
@@ -204,15 +228,15 @@ public class TestController {
             });
 
             // 多个对象去重
-            list1 = list.stream().collect(
+            /*list1 = list.stream().collect(
                     Collectors.collectingAndThen(
-                            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o->o.getXlh()+ ";" + o.getUsername()+";"+o.getPassword()))),
+                            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o->o.getXlh()+ ";" + o.getUsername()))),
                             ArrayList::new
                     )
             );
             log.info(JSONObject.toJSONString(list));
-            log.info(JSONObject.toJSONString(list1));
-            bzUserService.insertPatch(list1);
+            log.info(JSONObject.toJSONString(list1));*/
+            bzUserService.insertPatch(list);
         }catch (Exception e){
             jsonObject.put("success",false);
             jsonObject.put("result",e.getMessage());
@@ -220,4 +244,5 @@ public class TestController {
         jsonObject.put("list",list1);
         return jsonObject;
     }
+
 }
