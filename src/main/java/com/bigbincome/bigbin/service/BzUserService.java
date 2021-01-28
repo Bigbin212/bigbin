@@ -2,12 +2,11 @@ package com.bigbincome.bigbin.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bigbincome.bigbin.dao.BZUserDao;
-import com.bigbincome.bigbin.model.BZUserEntity;
+import com.bigbincome.bigbin.model.BZUser;
 import com.bigbincome.bigbin.util.DESUtil;
 import com.bigbincome.bigbin.util.DateUtils;
 import com.bigbincome.bigbin.util.IpUtil;
 import io.netty.util.internal.StringUtil;
-import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class BzUserService {
     @Autowired
     BZUserDao bzUserDao;
 
-    public List<BZUserEntity> findAll () {
+    public List<BZUser> findAll () {
         return bzUserDao.findAll();
     }
 
@@ -48,7 +47,7 @@ public class BzUserService {
      * @param username
      * @return
      */
-    public List<BZUserEntity> findAllByUsernameLike(String username){
+    public List<BZUser> findAllByUsernameLike(String username){
         StringBuilder stringBuilder = new StringBuilder();
         if(!StringUtil.isNullOrEmpty(username)){
             username = String.valueOf(stringBuilder.append("%").append(username).append("%"));
@@ -61,7 +60,7 @@ public class BzUserService {
      * @param username
      * @return
      */
-    public List<BZUserEntity> findAllByUsernameContaining(String username){
+    public List<BZUser> findAllByUsernameContaining(String username){
         return bzUserDao.findAllByUsernameContaining(username);
     };
 
@@ -71,7 +70,7 @@ public class BzUserService {
      * @return
      */
     public Map<String, Object> findAllPage(JSONObject jsonObject){
-        Page<BZUserEntity> resultPage = bzUserDao.findAllPage(jsonObject);
+        Page<BZUser> resultPage = bzUserDao.findAllPage(jsonObject);
         Long total = resultPage.getTotalElements();//数据总数
         Map<String , Object> resultMap = new HashMap<>();
         resultMap.put("total" , total);
@@ -83,13 +82,13 @@ public class BzUserService {
      * 新增或者修改
      * save 先保存在内存中->发flush或者commit命令
      * saveAndFlush 方法立马提交生效
-     * @param bzUserEntity
+     * @param BZUser
      * @param request
      */
-    public void insertMessage(BZUserEntity bzUserEntity, HttpServletRequest request){
-        bzUserEntity = initModel(bzUserEntity,request);
-//        bzUserDao.save(bzUserEntity);
-        bzUserDao.saveAndFlush(bzUserEntity);
+    public void insertMessage(BZUser BZUser, HttpServletRequest request){
+        BZUser = initModel(BZUser,request);
+//        bzUserDao.save(BZUser);
+        bzUserDao.saveAndFlush(BZUser);
     }
 
     /**
@@ -102,45 +101,45 @@ public class BzUserService {
 
     /**
      * 测试实体类的局部更新
-     * @param bzUserEntity
+     * @param BZUser
      * @param request
      */
-    public void updateMessage(BZUserEntity bzUserEntity, HttpServletRequest request) {
-        bzUserEntity = initModel(bzUserEntity,request);
-        bzUserDao.updateMessage(bzUserEntity);
+    public void updateMessage(BZUser BZUser, HttpServletRequest request) {
+        BZUser = initModel(BZUser,request);
+        bzUserDao.updateMessage(BZUser);
     }
 
     /**
      * 实体类初始化
-     * @param bzUserEntity
+     * @param BZUser
      * @param request
      * @return
      */
-    public BZUserEntity initModel(BZUserEntity bzUserEntity, HttpServletRequest request){
-       /* if(StringUtil.isNullOrEmpty(bzUserEntity.getXlh())){
-            bzUserEntity.setXlh(UUID.randomUUID().toString());
+    public BZUser initModel(BZUser BZUser, HttpServletRequest request){
+       /* if(StringUtil.isNullOrEmpty(BZUser.getXlh())){
+            BZUser.setXlh(UUID.randomUUID().toString());
         }*/
-        if(!StringUtil.isNullOrEmpty(bzUserEntity.getPassword())){
-            bzUserEntity.setPassword(DESUtil.encryptBasedDes(bzUserEntity.getPassword()));
+        if(!StringUtil.isNullOrEmpty(BZUser.getPassword())){
+            BZUser.setPassword(DESUtil.encryptBasedDes(BZUser.getPassword()));
         }else{
-            bzUserEntity.setPassword(DESUtil.encryptBasedDes(DEFAULT_PASSWORD));
+            BZUser.setPassword(DESUtil.encryptBasedDes(DEFAULT_PASSWORD));
         }
         log.info(DateUtils.formatDate2String(new Date(),null));
-        bzUserEntity.setIp(IpUtil.getIpAddr(request));
-        if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(bzUserEntity.getZcsj(),null))){
-            bzUserEntity.setZcsj(new Date());
+        BZUser.setIp(IpUtil.getIpAddr(request));
+        if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(BZUser.getZcsj(),null))){
+            BZUser.setZcsj(new Date());
         }
-        if(StringUtil.isNullOrEmpty(bzUserEntity.getYhqx())){
-            bzUserEntity.setYhqx(DEFAULT_ONE);
+        if(StringUtil.isNullOrEmpty(BZUser.getYhqx())){
+            BZUser.setYhqx(DEFAULT_ONE);
         }
-        return bzUserEntity;
+        return BZUser;
     }
 
     /**
      * 批量新增或修改
      * @param list1
      */
-    public void insertPatch(List<BZUserEntity> list1) {
+    public void insertPatch(List<BZUser> list1) {
         bzUserDao.saveAll(list1);
     }
 
@@ -156,13 +155,13 @@ public class BzUserService {
      */
     public JSONObject queryByPage(int pageNo, int pageSize, String userName,String zcsjStart,String zcsjEnd) {
         JSONObject jsonObject = new JSONObject();
-        List<BZUserEntity> result = null;
+        List<BZUser> result = null;
         long total = 0;
         List<Sort.Order> orderList = new ArrayList<>();
         // 构造自定义查询条件
-        Specification<BZUserEntity> queryCondition = new Specification<BZUserEntity>() {
+        Specification<BZUser> queryCondition = new Specification<BZUser>() {
             @Override
-            public Predicate toPredicate(Root<BZUserEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+            public Predicate toPredicate(Root<BZUser> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicateList = new ArrayList<>();
                 if (!StringUtil.isNullOrEmpty(userName)) {
 //                    predicateList.add(criteriaBuilder.equal(root.get("userName"), userName));
