@@ -222,10 +222,6 @@ public class TestController {
                 }*/
                 e.setIp(IpUtil.getIpAddr(request));
                 e.setPassword(DESUtil.encryptBasedDes(e.getPassword()));
-                if(StringUtil.isNullOrEmpty(DateUtils.formatDate2String(e.getZcsj(),null))){
-                    e.setZcsj(new Date());
-                }
-                e.setYhqx(BzUserService.DEFAULT_ONE);
             });
 
             // 多个对象去重
