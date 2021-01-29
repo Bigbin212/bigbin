@@ -9,8 +9,7 @@ import com.bigbincome.bigbin.common.util.IpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.util.internal.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +22,7 @@ import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-//@Log4j2
+@Log4j2
 @Transactional
 @Service
 public class BzUserService {
@@ -31,7 +30,7 @@ public class BzUserService {
     private static final String DEFAULT_PASSWORD = "88888888";
     public static final String DEFAULT_ONE = "1";
 
-    protected Logger log = LoggerFactory.getLogger(getClass());
+//    protected Logger log = LoggerFactory.getLogger(getClass());
     /*@Value("88888888")
     String DEFAULT_PASSWORD;
     @Value("1")

@@ -9,8 +9,7 @@ import com.bigbincome.bigbin.common.util.IpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.util.internal.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,14 +18,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.bigbincome.bigbin.common.Constants.*;
+
 /**
  * 这里的@RestController   相当于@ResponseBody + @Controller
  */
 @RestController
-//@Log4j2
+@Log4j2
 @RequestMapping(value = "/api")
 public class TestController {
-    protected Logger log = LoggerFactory.getLogger(getClass());
+//    protected Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     BzUserService bzUserService;
@@ -49,7 +50,7 @@ public class TestController {
     public JsonNode searchForm(@RequestParam(value = "username" ,required = false) String username){
         ObjectNode jsonObject = JsonUtils.object();
         List<BZUser> list = bzUserService.findAllByUsernameContaining(username);//bzUserService.findAllByUsernameLike(username);
-        jsonObject.set("result", JsonUtils.toJson(list));
+        jsonObject.set(RESULT, JsonUtils.toJson(list));
         return  jsonObject;
     }
 
@@ -61,11 +62,11 @@ public class TestController {
     @RequestMapping(value = "/searchAll",method = RequestMethod.GET)
     public JsonNode searchAll(){
         ObjectNode jsonObject = JsonUtils.object();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         try{
-            jsonObject.set("list",JsonUtils.toJson(bzUserService.findAll()));
+            jsonObject.set(RESULT,JsonUtils.toJson(bzUserService.findAll()));
         }catch(Exception e){
-            jsonObject.put("success",false);
+            jsonObject.put(SUCCESS,Boolean.FALSE);
         }
         return jsonObject;
     }
@@ -107,13 +108,12 @@ public class TestController {
     @RequestMapping(value = "/queryByPage",method = RequestMethod.GET)
     public Object queryByPage(@RequestParam("name") String name,@RequestParam(value = "pageSize",defaultValue = "10") String pageSize,@RequestParam(value = "pageNo",defaultValue = "1") String pageNo){
         ObjectNode jsonObject = JsonUtils.object();
-        List<BZUser> list = new ArrayList<>();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         try{
             return bzUserService.queryByPage(Integer.valueOf(pageNo),Integer.valueOf(pageSize),name,null,null);
         }catch (Exception e){
-            jsonObject.put("success",false);
-            jsonObject.put("message",e.getMessage());
+            jsonObject.put(SUCCESS,Boolean.FALSE);
+            jsonObject.put(MESSAGE,e.getMessage());
         }
         return jsonObject;
     }
@@ -131,12 +131,12 @@ public class TestController {
     @RequestMapping({"/addUser","/updateUser"})
     public JsonNode insertMapping(@RequestBody BZUser BZUser,HttpServletRequest request){
         ObjectNode jsonObject = JsonUtils.object();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         try{
             bzUserService.insertMessage(BZUser,request);
         }catch (Exception e){
-            jsonObject.put("success",false);
-            jsonObject.put("result",e.getMessage());
+            jsonObject.put(SUCCESS,Boolean.FALSE);
+            jsonObject.put(RESULT,e.getMessage());
         }
         return jsonObject;
     }
@@ -150,12 +150,12 @@ public class TestController {
     @RequestMapping(value = "/updateUserMessage",method = RequestMethod.PUT)
     public JsonNode updateMapping(@RequestBody BZUser BZUser,HttpServletRequest request){
         ObjectNode jsonObject = JsonUtils.object();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         try{
             bzUserService.updateMessage(BZUser,request);
         }catch (Exception e){
-            jsonObject.put("success",false);
-            jsonObject.put("result",e.getMessage());
+            jsonObject.put(SUCCESS,Boolean.FALSE);
+            jsonObject.put(RESULT,e.getMessage());
         }
         return jsonObject;
     }
@@ -168,16 +168,16 @@ public class TestController {
     @RequestMapping(value = "/deleteUser",method = RequestMethod.DELETE)
     public JsonNode deleteUser(@RequestParam("xlh") String xlh){
         ObjectNode jsonObject = JsonUtils.object();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         if (StringUtil.isNullOrEmpty(xlh)){
-            jsonObject.put("success",false);
-            jsonObject.put("message","删除主键不可为空！");
+            jsonObject.put(SUCCESS,Boolean.FALSE);
+            jsonObject.put(MESSAGE,"删除主键不可为空！");
         }
         try{
             bzUserService.deleteUser(xlh);
         }catch (Exception e){
-            jsonObject.put("success",false);
-            jsonObject.put("result",e.getMessage());
+            jsonObject.put(SUCCESS,Boolean.FALSE);
+            jsonObject.put(RESULT,e.getMessage());
         }
 
         return jsonObject;
@@ -191,12 +191,12 @@ public class TestController {
     @RequestMapping(value = "/deleteUserList",method = RequestMethod.DELETE)
     public JsonNode deleteUserList(@RequestBody List<String> list){
         ObjectNode jsonObject = JsonUtils.object();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         try{
             bzUserService.deleteUserList(list);
         }catch (Exception e){
-            jsonObject.put("success",false);
-            jsonObject.put("result",e.getMessage());
+            jsonObject.put(SUCCESS,Boolean.FALSE);
+            jsonObject.put(RESULT,e.getMessage());
         }
 
         return jsonObject;
@@ -213,7 +213,7 @@ public class TestController {
     @RequestMapping(value = "/addUserList", method = RequestMethod.POST)
     public Object addUserList(@RequestBody List<BZUser> list,HttpServletRequest request){
         ObjectNode jsonObject = JsonUtils.object();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         List<BZUser> list1 = new ArrayList<BZUser>();
         try{
             list.forEach(e->{
@@ -235,8 +235,8 @@ public class TestController {
             log.info(JsonUtils.toJson(list1).toString());
             bzUserService.insertPatch(list);
         }catch (Exception e){
-            jsonObject.put("success",false);
-            jsonObject.put("result",e.getMessage());
+            jsonObject.put(SUCCESS,Boolean.FALSE);
+            jsonObject.put(RESULT,e.getMessage());
         }
         jsonObject.set("list",JsonUtils.toJson(list1));
         return jsonObject;
@@ -246,7 +246,7 @@ public class TestController {
     @PostMapping(value = "/importExcel")
     public JsonNode importExcel(@RequestParam("file")MultipartFile file){
         ObjectNode jsonObject = JsonUtils.object();
-        jsonObject.put("success",true);
+        jsonObject.put(SUCCESS,Boolean.TRUE);
         System.out.println("file = " + file.getName());
         return jsonObject;
     }

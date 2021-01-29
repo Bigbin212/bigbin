@@ -46,6 +46,8 @@ public interface BZUserDao extends JpaRepository<BZUser, Long>, JpaSpecification
     @Query(value="delete from b_z_user where xlh = :xlh",nativeQuery = true)
     int deleteByXlh(@Param("xlh") String xlh);
 
+    int deleteAllByXlh(String xlh);
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value="update b_z_user set username = :#{#BZUser.username} ,email = :#{#BZUser.email} ," +
