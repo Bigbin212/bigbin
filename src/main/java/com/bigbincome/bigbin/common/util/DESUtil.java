@@ -1,4 +1,4 @@
-package com.bigbincome.bigbin.util;
+package com.bigbincome.bigbin.common.util;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

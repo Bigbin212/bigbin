@@ -2,8 +2,8 @@ package com.bigbincome.bigbin.dao;
 
 
 import com.alibaba.druid.util.StringUtils;
-import com.alibaba.fastjson.JSONObject;
 import com.bigbincome.bigbin.model.BZUser;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,13 +27,13 @@ public interface BZUserDao extends JpaRepository<BZUser, Long>, JpaSpecification
     //模糊查询不需要手动加%%
     List<BZUser> findAllByUsernameContaining(String username);
 
-    default Page<BZUser> findAllPage(JSONObject jsonObject){
-        Pageable pageable = new PageRequest(jsonObject.getInteger("pageNo") - 1 ,jsonObject.getInteger("pageSize") , new Sort(Sort.Direction.DESC, "xlh"));
+    default Page<BZUser> findAllPage(JsonNode jsonObject){
+        Pageable pageable = new PageRequest(jsonObject.get("pageNo").asInt() - 1 ,jsonObject.get("pageSize").asInt() , new Sort(Sort.Direction.DESC, "xlh"));
         return this.findAll((root, query, cb) -> {
             List<Predicate> list = new ArrayList<>();
             //附加的查询条件
-            if (!StringUtils.isEmpty(jsonObject.getString("name"))){
-                list.add(cb.like(root.get("username") , "%"+jsonObject.getString("name")+"%"));
+            if (!StringUtils.isEmpty(jsonObject.get("name").textValue())){
+                list.add(cb.like(root.get("username") , "%"+jsonObject.get("name").textValue()+"%"));
             }
             Predicate[] p = new Predicate[list.size()];
             query.where(cb.and(list.toArray(p)));
@@ -57,4 +57,5 @@ public interface BZUserDao extends JpaRepository<BZUser, Long>, JpaSpecification
     @Query(value = "delete from b_z_user where xlh in (:xlhs)",nativeQuery = true)
     void deleteByXlhList(@Param("xlhs") List<String> xlhs);
 
+    void deleteAllByXlhIn(List<String> xlhs);
 }

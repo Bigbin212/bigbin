@@ -1,4 +1,4 @@
-package com.bigbincome.bigbin.util;
+package com.bigbincome.bigbin.common.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;

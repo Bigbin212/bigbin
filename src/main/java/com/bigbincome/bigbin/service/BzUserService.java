@@ -1,11 +1,13 @@
 package com.bigbincome.bigbin.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.bigbincome.bigbin.common.util.JsonUtils;
 import com.bigbincome.bigbin.dao.BZUserDao;
 import com.bigbincome.bigbin.model.BZUser;
-import com.bigbincome.bigbin.util.DESUtil;
-import com.bigbincome.bigbin.util.DateUtils;
-import com.bigbincome.bigbin.util.IpUtil;
+import com.bigbincome.bigbin.common.util.DESUtil;
+import com.bigbincome.bigbin.common.util.DateUtils;
+import com.bigbincome.bigbin.common.util.IpUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.util.internal.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +71,7 @@ public class BzUserService {
      * @param jsonObject
      * @return
      */
-    public Map<String, Object> findAllPage(JSONObject jsonObject){
+    public Map<String, Object> findAllPage(ObjectNode jsonObject){
         Page<BZUser> resultPage = bzUserDao.findAllPage(jsonObject);
         Long total = resultPage.getTotalElements();//数据总数
         Map<String , Object> resultMap = new HashMap<>();
@@ -153,8 +155,8 @@ public class BzUserService {
      * @param zcsjEnd
      * @return
      */
-    public JSONObject queryByPage(int pageNo, int pageSize, String userName,String zcsjStart,String zcsjEnd) {
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode queryByPage(int pageNo, int pageSize, String userName, String zcsjStart, String zcsjEnd) {
+        ObjectNode jsonObject = JsonUtils.object();
         List<BZUser> result = null;
         long total = 0;
         List<Sort.Order> orderList = new ArrayList<>();
@@ -189,7 +191,7 @@ public class BzUserService {
             }
             //直接统计符合条件的数据的个数
             total = bzUserDao.count(queryCondition);
-            jsonObject.put("list",result);
+            jsonObject.set("list",JsonUtils.toJson(result));
             jsonObject.put("total",total);
         } catch (Exception e) {
             log.error("--queryByPage-- error : ", e);
@@ -203,6 +205,6 @@ public class BzUserService {
      * @param list
      */
     public void deleteUserList(List<String> list) {
-        bzUserDao.deleteByXlhList(list);
+        bzUserDao.deleteAllByXlhIn(list);
     }
 }

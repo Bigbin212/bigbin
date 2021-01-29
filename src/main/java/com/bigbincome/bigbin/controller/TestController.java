@@ -1,14 +1,14 @@
 package com.bigbincome.bigbin.controller;
 
 import com.alibaba.druid.util.StringUtils;
-import com.alibaba.fastjson.JSONObject;
+import com.bigbincome.bigbin.common.util.JsonUtils;
 import com.bigbincome.bigbin.model.BZUser;
 import com.bigbincome.bigbin.service.BzUserService;
-import com.bigbincome.bigbin.util.DESUtil;
-import com.bigbincome.bigbin.util.DateUtils;
-import com.bigbincome.bigbin.util.IpUtil;
+import com.bigbincome.bigbin.common.util.DESUtil;
+import com.bigbincome.bigbin.common.util.IpUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.util.internal.StringUtil;
-import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +46,10 @@ public class TestController {
      */
     @CrossOrigin
     @RequestMapping(value = "/search",method = RequestMethod.GET)
-    public Object searchForm(@RequestParam(value = "username" ,required = false) String username){
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode searchForm(@RequestParam(value = "username" ,required = false) String username){
+        ObjectNode jsonObject = JsonUtils.object();
         List<BZUser> list = bzUserService.findAllByUsernameContaining(username);//bzUserService.findAllByUsernameLike(username);
-        jsonObject.put("result",list);
+        jsonObject.set("result", JsonUtils.toJson(list));
         return  jsonObject;
     }
 
@@ -59,11 +59,11 @@ public class TestController {
      */
     @CrossOrigin
     @RequestMapping(value = "/searchAll",method = RequestMethod.GET)
-    public Object searchAll(){
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode searchAll(){
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("success",true);
         try{
-            jsonObject.put("list",bzUserService.findAll());
+            jsonObject.set("list",JsonUtils.toJson(bzUserService.findAll()));
         }catch(Exception e){
             jsonObject.put("success",false);
         }
@@ -80,7 +80,7 @@ public class TestController {
     @CrossOrigin
     @RequestMapping(value = "/searchMessage",method = RequestMethod.GET)
     public Map<String , Object> findAll(@RequestParam("name") String name,@RequestParam("pageSize") String pageSize,@RequestParam("pageNo") String pageNo){
-        JSONObject jsonObject = new JSONObject();
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("name",name);
         if (StringUtils.isEmpty(pageSize)){
             jsonObject.put("pageSize" , 10);
@@ -106,11 +106,11 @@ public class TestController {
     @CrossOrigin
     @RequestMapping(value = "/queryByPage",method = RequestMethod.GET)
     public Object queryByPage(@RequestParam("name") String name,@RequestParam(value = "pageSize",defaultValue = "10") String pageSize,@RequestParam(value = "pageNo",defaultValue = "1") String pageNo){
-        JSONObject jsonObject = new JSONObject();
+        ObjectNode jsonObject = JsonUtils.object();
         List<BZUser> list = new ArrayList<>();
         jsonObject.put("success",true);
         try{
-            jsonObject.putAll(bzUserService.queryByPage(Integer.valueOf(pageNo),Integer.valueOf(pageSize),name,null,null));
+            return bzUserService.queryByPage(Integer.valueOf(pageNo),Integer.valueOf(pageSize),name,null,null);
         }catch (Exception e){
             jsonObject.put("success",false);
             jsonObject.put("message",e.getMessage());
@@ -129,8 +129,8 @@ public class TestController {
      */
     @CrossOrigin
     @RequestMapping({"/addUser","/updateUser"})
-    public Object insertMapping(@RequestBody BZUser BZUser,HttpServletRequest request){
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode insertMapping(@RequestBody BZUser BZUser,HttpServletRequest request){
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("success",true);
         try{
             bzUserService.insertMessage(BZUser,request);
@@ -148,8 +148,8 @@ public class TestController {
      * @return
      */
     @RequestMapping(value = "/updateUserMessage",method = RequestMethod.PUT)
-    public Object updateMapping(@RequestBody BZUser BZUser,HttpServletRequest request){
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode updateMapping(@RequestBody BZUser BZUser,HttpServletRequest request){
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("success",true);
         try{
             bzUserService.updateMessage(BZUser,request);
@@ -166,8 +166,8 @@ public class TestController {
      * @return
      */
     @RequestMapping(value = "/deleteUser",method = RequestMethod.DELETE)
-    public Object deleteUser(@RequestParam("xlh") String xlh){
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode deleteUser(@RequestParam("xlh") String xlh){
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("success",true);
         if (StringUtil.isNullOrEmpty(xlh)){
             jsonObject.put("success",false);
@@ -189,8 +189,8 @@ public class TestController {
      * @return
      */
     @RequestMapping(value = "/deleteUserList",method = RequestMethod.DELETE)
-    public Object deleteUserList(@RequestBody List<String> list){
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode deleteUserList(@RequestBody List<String> list){
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("success",true);
         try{
             bzUserService.deleteUserList(list);
@@ -212,7 +212,7 @@ public class TestController {
     @CrossOrigin
     @RequestMapping(value = "/addUserList", method = RequestMethod.POST)
     public Object addUserList(@RequestBody List<BZUser> list,HttpServletRequest request){
-        JSONObject jsonObject = new JSONObject();
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("success",true);
         List<BZUser> list1 = new ArrayList<BZUser>();
         try{
@@ -231,21 +231,21 @@ public class TestController {
                             ArrayList::new
                     )
             );
-            log.info(JSONObject.toJSONString(list));
-            log.info(JSONObject.toJSONString(list1));
+            log.info(JsonUtils.toJson(list).toString());
+            log.info(JsonUtils.toJson(list1).toString());
             bzUserService.insertPatch(list);
         }catch (Exception e){
             jsonObject.put("success",false);
             jsonObject.put("result",e.getMessage());
         }
-        jsonObject.put("list",list1);
+        jsonObject.set("list",JsonUtils.toJson(list1));
         return jsonObject;
     }
 
     @CrossOrigin
     @PostMapping(value = "/importExcel")
-    public Object importExcel(@RequestParam("file")MultipartFile file){
-        JSONObject jsonObject = new JSONObject();
+    public JsonNode importExcel(@RequestParam("file")MultipartFile file){
+        ObjectNode jsonObject = JsonUtils.object();
         jsonObject.put("success",true);
         System.out.println("file = " + file.getName());
         return jsonObject;
