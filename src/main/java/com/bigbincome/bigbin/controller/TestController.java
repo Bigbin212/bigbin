@@ -6,6 +6,8 @@ import com.bigbincome.bigbin.model.BZUser;
 import com.bigbincome.bigbin.service.BzUserService;
 import com.bigbincome.bigbin.common.util.DESUtil;
 import com.bigbincome.bigbin.common.util.IpUtil;
+import com.bigbincome.bigbin.vo.ScheduleTasks;
+import com.bigbincome.bigbin.vo.Tasks;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.util.internal.StringUtil;
@@ -249,6 +251,16 @@ public class TestController {
         jsonObject.put(SUCCESS,Boolean.TRUE);
         System.out.println("file = " + file.getName());
         return jsonObject;
+    }
+
+    @GetMapping(value = "test")
+    public JsonNode test(){
+        String json = "{\"unitId\":\"865af4cb-e348-4533-9302-63895b0bba27\",\"tasks\":[{\"taskId\":\"dccc7375-90ba-48ce-bf1e-80903dbc6dbc\",\"taskName\":\"用户安全治理\",\"color\":\"171,184,195,1\"}]}";
+        ObjectNode resultNode = (ObjectNode) JsonUtils.from(json);
+        List<ScheduleTasks> list = JsonUtils.to(resultNode.findValue("tasks"),List.class);
+//        list.add(ScheduleTasks.builder().taskId("dccc7375-90ba-48ce-bf1e-80903dbc6dbc").taskName("用户安全治理").build());
+        List<Tasks> list1 = list.stream().map(l->Tasks.of(l)).collect(Collectors.toList());
+        return JsonUtils.object().put(SUCCESS,Boolean.TRUE).set(RESULT,JsonUtils.toJson(list1));
     }
 
 }
