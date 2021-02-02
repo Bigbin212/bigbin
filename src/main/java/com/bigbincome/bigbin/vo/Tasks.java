@@ -12,7 +12,6 @@ public class Tasks {
     private String name;
 
     public static Tasks of(ScheduleTasks s){
-        System.out.println(s.toString());
         return Tasks.builder().id(s.getTaskId()).name(s.getTaskName()).build();
     }
 }

@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Function;
 
@@ -81,6 +82,13 @@ public class JsonUtils {
 	public static <T> T to(JsonNode json, Class<T> clz) {
 		return INSTANCE.mapper.convertValue(json, clz);
 	}
+
+	public static <T> List<T> toList(JsonNode json, Class<T> clz) {
+		Class<?> arrayType = Array.newInstance(clz, 0).getClass();
+		T[] array = (T[]) INSTANCE.mapper.convertValue(json, arrayType);
+		return Arrays.asList(array);
+	}
+
 
 	public static JsonNode toJson(Object o) {
 		return INSTANCE.mapper.valueToTree(o);

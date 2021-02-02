@@ -257,7 +257,7 @@ public class TestController {
     public JsonNode test(){
         String json = "{\"unitId\":\"865af4cb-e348-4533-9302-63895b0bba27\",\"tasks\":[{\"taskId\":\"dccc7375-90ba-48ce-bf1e-80903dbc6dbc\",\"taskName\":\"用户安全治理\",\"color\":\"171,184,195,1\"}]}";
         ObjectNode resultNode = (ObjectNode) JsonUtils.from(json);
-        List<ScheduleTasks> list = JsonUtils.to(resultNode.findValue("tasks"),List.class);
+        List<ScheduleTasks> list = JsonUtils.toList(resultNode.findValue("tasks"),ScheduleTasks.class);
 //        list.add(ScheduleTasks.builder().taskId("dccc7375-90ba-48ce-bf1e-80903dbc6dbc").taskName("用户安全治理").build());
         List<Tasks> list1 = list.stream().map(l->Tasks.of(l)).collect(Collectors.toList());
         return JsonUtils.object().put(SUCCESS,Boolean.TRUE).set(RESULT,JsonUtils.toJson(list1));
