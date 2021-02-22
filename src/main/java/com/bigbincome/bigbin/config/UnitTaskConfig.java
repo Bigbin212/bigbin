@@ -1,6 +1,7 @@
 package com.bigbincome.bigbin.config;
 
 import com.bigbincome.bigbin.common.util.JsonUtils;
+import com.bigbincome.bigbin.vo.Tasks;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,8 +39,8 @@ public class UnitTaskConfig {
 		return Optional.ofNullable(this.configs.get(unitId));
 	}
 
-	public Optional<JsonNode> getTask(String unitId, String taskId) {
-		return get(unitId).map(o -> o.get(taskId));
+	public Optional<Tasks> getTask(String unitId, String taskId) {
+		return get(unitId).map(o -> o.get(taskId)).map(t->Tasks.builder().cph(t.get(CPH).asInt()).rate(t.get(RATE).asDouble()).build());
 	}
 
 }

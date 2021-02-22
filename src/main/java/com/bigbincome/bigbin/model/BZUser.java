@@ -21,7 +21,6 @@ public class BZUser {
     private String username;
     private String password;
 
-    @Lob
     private String ip;
 
     private String email;
@@ -34,7 +33,7 @@ public class BZUser {
     private String phone;
 
     @Lob
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition="text")
     private String photo;
 
     @Builder.Default
