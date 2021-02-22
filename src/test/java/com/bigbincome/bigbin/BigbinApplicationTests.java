@@ -1,9 +1,7 @@
 package com.bigbincome.bigbin;
 
-import com.bigbincome.bigbin.common.Constants;
 import com.bigbincome.bigbin.common.util.JsonUtils;
 import com.bigbincome.bigbin.config.UnitTaskConfig;
-import com.bigbincome.bigbin.vo.Tasks;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -71,19 +69,12 @@ public class BigbinApplicationTests {
         Map<String,List<Task>> map1 = list.stream().collect(Collectors.groupingBy(Task::getTaskId));
         System.out.println(map1);
 
-        final String ID = "id";
-        final String NAME = "name";
-
         /**
          * Map转List
          */
-        List<Map> testList = taskMap.entrySet().stream()
-                    .map(t-> {
-                        Map<String,String> m = new HashMap<>();
-                        m.put(ID,t.getKey());
-                        m.put(NAME,t.getValue().getTaskName());
-                        return m;
-                    }).collect(Collectors.toList());
+        List<ObjectNode> testList = taskMap.entrySet().stream()
+                .map(t-> JsonUtils.object().put("id",t.getKey()).put("name",t.getValue().getTaskName()))
+                .collect(Collectors.toList());
 
         System.out.println("testList " + testList);
 
