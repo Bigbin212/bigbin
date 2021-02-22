@@ -52,20 +52,40 @@ public class BigbinApplicationTests {
 
         List<Task> list = new ArrayList<>();
         list.add(Task.builder().taskId("1").taskName("NAME1").build());
+        System.out.println("list isEmpty " + list.isEmpty());
+        System.out.println("list size " + list.size());
+        System.out.println(list.get(0).toString());
+
         list.add(Task.builder().taskId("1").taskName("NAME2").build());
         list.add(Task.builder().taskId("3").taskName("NAME3").build());
         list.add(Task.builder().taskId("4").taskName("NAME4").build());
 
         //List转Map
         Map<String, String> map = list.stream().collect(Collectors.toMap(Task::getTaskId,Task::getTaskName,(o1, o2)->o2));
-        System.out.println(map);
+        System.out.println("map " + map);
 
         //List转Map
         Map<String, Task> taskMap = list.stream().collect(Collectors.toMap(Task::getTaskId,t->t,(o1, o2)->o2));
-        System.out.println(taskMap);
+        System.out.println("taskMap " + taskMap);
 
         Map<String,List<Task>> map1 = list.stream().collect(Collectors.groupingBy(Task::getTaskId));
         System.out.println(map1);
+
+        final String ID = "id";
+        final String NAME = "name";
+
+        /**
+         * Map转List
+         */
+        List<Map> testList = taskMap.entrySet().stream()
+                    .map(t-> {
+                        Map<String,String> m = new HashMap<>();
+                        m.put(ID,t.getKey());
+                        m.put(NAME,t.getValue().getTaskName());
+                        return m;
+                    }).collect(Collectors.toList());
+
+        System.out.println("testList " + testList);
 
         //Map遍历
         taskMap.forEach((k,v)->{
