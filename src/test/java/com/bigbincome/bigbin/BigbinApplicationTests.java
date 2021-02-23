@@ -46,21 +46,22 @@ public class BigbinApplicationTests {
     @Test
     public void contextLoads() {
 
-
-
         List<Task> list = new ArrayList<>();
         list.add(Task.builder().taskId("1").taskName("NAME1").build());
-        System.out.println("list isEmpty " + list.isEmpty());
-        System.out.println("list size " + list.size());
-        System.out.println(list.get(0).toString());
-
         list.add(Task.builder().taskId("1").taskName("NAME2").build());
         list.add(Task.builder().taskId("3").taskName("NAME3").build());
         list.add(Task.builder().taskId("4").taskName("NAME4").build());
 
         //List转Map
         Map<String, String> map = list.stream().collect(Collectors.toMap(Task::getTaskId,Task::getTaskName,(o1, o2)->o2));
-        System.out.println("map " + map);
+        System.out.println("List转Map " + map);
+
+        Map<String, String> mapTask = new HashMap<>();
+        map.forEach((k,v)->{
+            mapTask.put(v,k);
+        });
+        System.out.println("mapTask " + mapTask);
+
 
         //List转Map
         Map<String, Task> taskMap = list.stream().collect(Collectors.toMap(Task::getTaskId,t->t,(o1, o2)->o2));
@@ -78,13 +79,15 @@ public class BigbinApplicationTests {
 
         System.out.println("testList " + testList);
 
-        //Map遍历
-        taskMap.forEach((k,v)->{
-            System.out.println(k + " " + v.toString());
-        });
+        List<ObjectNode> list1 =  taskMap.entrySet()
+                .stream().map(t->JsonUtils.object().put(t.getValue().getTaskName(),t.getKey()))
+                .collect(Collectors.toList());
+        System.out.println("Map转List " + list1);
+
 
         //List转List
-        System.out.println(list.stream().map(l->TaskTo.of(l)).collect(Collectors.toList()));
+        List<TaskTo> taskToList = list.stream().map(l->TaskTo.of(l)).collect(Collectors.toList());
+        System.out.println("taskToList " + taskToList);
 
         System.out.println(unitTaskConfig.getTask("11000078","46994b87-a1f1-441e-93d1-c31a5baf6a2e"));
 
