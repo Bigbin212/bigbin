@@ -2,6 +2,11 @@ package com.bigbincome.bigbin.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.Calendar;
@@ -53,6 +58,7 @@ public class DateUtils {
 		}
 		return date;
 	}
+
 	/**
 	 * 调整日期时间
 	 * @param date		当前时间
@@ -214,5 +220,27 @@ public class DateUtils {
 		sf.setTimeZone(TimeZone.getTimeZone(timeZone));
 		logger.debug("Timezone :" + timeZone);
 		return sf;
+	}
+
+	/**
+	 * 获得某天最大时间 例如 2020-01-01 23:59:59
+	 * @param date
+	 * @return
+	 */
+	public static Date getEndOfDay(Date date) {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());;
+		LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+		return Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 获得某天最小时间 例如 2020-01-01 00:00:00
+	 * @param date
+	 * @return
+	 */
+	public static Date getStartOfDay(Date date) {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+		LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+		return Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
 	}
 }
